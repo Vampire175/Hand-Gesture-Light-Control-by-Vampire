@@ -28,7 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_alignParentTop="true"
-            android:background="@color/toolbar_background">
+            android:background="@color/toolbar_background"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -41,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
+            android:visibility="gone"
             app:itemIconTint="@color/bg_nav_item"
             app:itemTextColor="@color/bg_nav_item"
             app:menu="@menu/menu_bottom_nav" />
@@ -52,6 +54,26 @@
             android:layout_below="@id/navigation"
             android:background="@android:color/darker_gray" />
 
+        <TextView
+            android:id="@+id/gestureTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="0dp"
+            android:background="#66000000"
+            android:padding="8dp"
+            android:text="Gesture: -"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnConnectBluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:text="Connect BT" />
+
     </RelativeLayout>
 
     <!-- Overlay UI on top of everything -->
@@ -59,30 +81,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <TextView
-            android:id="@+id/gestureTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gesture: -"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:padding="8dp"
-            android:background="#66000000"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btnConnectBluetooth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect BT"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

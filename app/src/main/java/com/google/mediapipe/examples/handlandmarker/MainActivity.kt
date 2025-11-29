@@ -1,6 +1,7 @@
 package com.google.mediapipe.examples.handlandmarker
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -100,6 +101,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    @SuppressLint("MissingPermission")
     private fun connectToDevice(device: BluetoothDevice) {
         Thread @androidx.annotation.RequiresPermission(android.Manifest.permission.BLUETOOTH_CONNECT) {
             try {
