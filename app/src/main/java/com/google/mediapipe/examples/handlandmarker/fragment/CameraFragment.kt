@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -22,12 +24,16 @@ import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.Calendar
+
+
 
 class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
 
     companion object {
         private const val TAG = "Hand Landmarker"
     }
+
 
     private var _fragmentCameraBinding: FragmentCameraBinding? = null
     private val fragmentCameraBinding get() = _fragmentCameraBinding!!
@@ -42,6 +48,8 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
     private var cameraFacing = CameraSelector.LENS_FACING_FRONT
 
     private lateinit var backgroundExecutor: ExecutorService
+    lateinit var copyright: TextView
+
 
     override fun onResume() {
         super.onResume()
@@ -77,6 +85,8 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
         backgroundExecutor.shutdown()
         backgroundExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)
     }
+    private val calendar = Calendar.getInstance()
+    val currentYear = calendar.get(Calendar.YEAR)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,6 +100,10 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val activity = activity as? AppCompatActivity
+        activity?.setContentView(R.layout.fragment_camera)
+        copyright= activity?.findViewById(R.id.copyright)!!
+        copyright.text = "© $currentYear Vampire Studios. All rights reserved."
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 

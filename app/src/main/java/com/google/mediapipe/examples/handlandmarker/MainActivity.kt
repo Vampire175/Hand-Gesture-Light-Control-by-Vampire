@@ -18,7 +18,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import java.io.OutputStream
 import java.util.UUID
-import com.google.mediapipe.examples.handlandmarker.R
+
 
 class MainActivity : AppCompatActivity() {
 
