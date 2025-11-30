@@ -85,8 +85,7 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
         backgroundExecutor.shutdown()
         backgroundExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS)
     }
-    private val calendar = Calendar.getInstance()
-    val currentYear = calendar.get(Calendar.YEAR)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,10 +99,7 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = activity as? AppCompatActivity
-        activity?.setContentView(R.layout.fragment_camera)
-        copyright= activity?.findViewById(R.id.copyright)!!
-        copyright.text = "© $currentYear Vampire Studios. All rights reserved."
+
 
         backgroundExecutor = Executors.newSingleThreadExecutor()
 
