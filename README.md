@@ -17,7 +17,7 @@ This document is published as a **public technical disclosure** to establish **p
 
 ## 2. Overview of the App Concept
 
-**Hand Gesture Light Control** is an assistive technology project designed to enable users—particularly individuals with physical disabilities—to control electronic appliances using simple hand gestures.
+**Roomates AI** is an assistive technology project designed to enable users—particularly individuals with physical disabilities—to control electronic appliances using simple hand gestures.
 
 ### 🔹 Problem Addressed
 
