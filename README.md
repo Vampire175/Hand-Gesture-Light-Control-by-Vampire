@@ -36,6 +36,9 @@ The system integrates the following components:
 
 * Arduino microcontroller
 * HC‑05 Bluetooth module
+**OR**
+* ESP32
+  
 * Computer vision–based hand gesture recognition using MediaPipe
 
 Recognized hand gestures are processed and converted into control signals, which are then transmitted to the Arduino via Bluetooth for appliance control.
@@ -68,8 +71,8 @@ The system is composed of the following layers:
 ### 🔹 Hardware Control Layer
 
 * Encodes gesture results into byte‑level commands
-* Transmits commands to Arduino via Bluetooth
-* Arduino executes actions (e.g., switching lights ON/OFF)
+* Transmits commands to Arduino/ESP32 via Bluetooth
+* Arduino/ESP32 executes actions (e.g., switching lights ON/OFF)
 
 ---
 
