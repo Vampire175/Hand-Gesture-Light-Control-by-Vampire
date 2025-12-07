@@ -1,4 +1,4 @@
-# 🖐️ Hand Gesture Light Control
+# 🖐️ Roomates AI
 
 ---
 
