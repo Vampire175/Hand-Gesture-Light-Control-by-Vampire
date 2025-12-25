@@ -15,7 +15,7 @@
     ~ limitations under the License.
 -->
 <resources>
-    <string name="app_name">Hand Gesture Light Control by Vampire</string>
+    <string name="app_name">RoomMates AI</string>
 
     <string name="media_pipe">MediaPipe</string>
 

@@ -50,6 +50,8 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
     private lateinit var backgroundExecutor: ExecutorService
     lateinit var copyright: TextView
 
+    public var start: Boolean = false
+
 
     override fun onResume() {
         super.onResume()
@@ -132,41 +134,117 @@ class CameraFragment : Fragment(), HandLandmarkerHelper.LandmarkerListener {
     private fun isPalmOpen(landmarks: List<NormalizedLandmark>): Boolean =
         landmarks[20].y() < landmarks[17].y()   // pinky tip above MCP
 
+
     private fun detectGesture(landmarks: List<NormalizedLandmark>): String {
-        val indexOpen = fingerIsOpen(landmarks, 8, 6)
-        val middleOpen = fingerIsOpen(landmarks, 12, 10)
-        val ringOpen = fingerIsOpen(landmarks, 16, 14)
-        val pinkyOpen = fingerIsOpen(landmarks, 20, 18)
-
-        // Create the states variable with finger information
-        val states: List<Int> = listOf(
-            if (indexOpen) 1 else 0,
-            if (middleOpen) 1 else 0,
-            if (ringOpen) 1 else 0,
-            if (pinkyOpen) 1 else 0,
-            if (isPalmOpen(landmarks)) 1 else 0
-        )
-
+        val indexOpen = fingerIsOpen(landmarks, 8, 5)
+        val middleOpen = fingerIsOpen(landmarks, 12, 9)
+        val ringOpen = fingerIsOpen(landmarks, 16, 13)
+        val pinkyOpen = fingerIsOpen(landmarks, 20, 17)
+        val thumbOpen = fingerIsOpen(landmarks, 4, 1)
 
         val main = activity as? MainActivity
-        main?.sendFingerStates(states)
 
-        return when {
-            !indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isPalmOpen(landmarks) ->
-                "Fist (Closed Palm)"
-            indexOpen && middleOpen && ringOpen && pinkyOpen && isPalmOpen(landmarks) ->
-                "Open Palm"
-            indexOpen && !middleOpen && !ringOpen && !pinkyOpen ->
-                "Index Finger"
-            indexOpen && middleOpen && !ringOpen && !pinkyOpen ->
-                "Index + Middle"
-            indexOpen && middleOpen && ringOpen && !pinkyOpen ->
-                "Index + Middle + Ring"
-            indexOpen && middleOpen && ringOpen && pinkyOpen && !isPalmOpen(landmarks) ->
-                "All Four Fingers"
-            else -> "Unknown"
+        var fingerState: List<Int>
+        var gestureName: String
+        var gestureShown: Boolean=false
+
+        when {
+            // Index finger only -> LED 1 ON
+            indexOpen && !middleOpen && !ringOpen && !pinkyOpen -> {
+                gestureShown=true
+                fingerState = if(start) {
+                    listOf(1, 0, 0, 0, 0)
+                } else {
+                    listOf(0, 0, 0, 0, 0)
+                }
+                gestureName = "Index Finger"
+            }
+
+            // Middle finger only -> LED 2 ON
+            indexOpen && middleOpen && !ringOpen && !pinkyOpen -> {
+                gestureShown=true
+                fingerState = listOf(0, 1, 0, 0, 0)
+                gestureName = "Middle Finger"
+            }
+
+/*            thumbOpen&&indexOpen&&middleOpen&&ringOpen->{
+                  gestureShown=true
+//                gestureName="Ring Finger"
+            }*/
+
+            // Pinky only -> Speaker 1 ON
+            !indexOpen && !middleOpen && !ringOpen && pinkyOpen -> {
+                gestureShown=true
+                fingerState = listOf(0, 0, 1, 0, 0)
+                gestureName = "Pinky"
+            }
+
+            // Thumb only -> Speaker 2 ON
+            thumbOpen && !indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isPalmOpen(landmarks) -> {
+                fingerState = listOf(0, 0, 0, 1, 0)
+                gestureName = "Thumb"
+                gestureShown=true
+            }
+
+            // Open palm -> All ON
+            indexOpen && middleOpen && ringOpen && pinkyOpen && isPalmOpen(landmarks) -> {
+                fingerState = listOf(0,0, 0, 0, 0)
+                gestureName = "Open Palm"
+                gestureShown=true
+            }
+
+            // Closed fist -> All OFF
+            !indexOpen && !middleOpen && !ringOpen && !pinkyOpen && !isPalmOpen(landmarks) && !thumbOpen-> {
+                fingerState = listOf(1,1, 0, 0, 0)
+                gestureName = "Fist (Closed Palm)"
+                gestureShown=true
+            }
+
+            // Toggle start state
+            indexOpen && pinkyOpen && thumbOpen -> {
+
+                start=true
+                if(!start) {
+                    activity?.runOnUiThread {
+                        Toast.makeText(
+                            requireContext(),
+                            "Hand Gesture Control Enabled",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                fingerState = listOf(0, 0, 0, 0, 0)
+                gestureName = "Toggle Start"
+
+            }
+
+            else -> {
+                fingerState = listOf(0, 0, 0, 0, 0)
+
+                // Build gesture name from boolean states
+                val openFingers = mutableListOf<String>()
+                if (thumbOpen) openFingers.add("Thumb")
+                if (indexOpen) openFingers.add("Index")
+                if (middleOpen) openFingers.add("Middle")
+                if (ringOpen) openFingers.add("Ring")
+                if (pinkyOpen) openFingers.add("Pinky")
+
+                gestureName = if (openFingers.isEmpty()) {
+                    "No fingers detected"
+                } else {
+                    "Open: ${openFingers.joinToString(", ")}"
+                }
+            }
+
         }
+
+        // Now fingerState and gestureName are initialized
+        main?.sendFingerStates(states = fingerState, isEnabled = start)
+        return gestureName
     }
+
+
+
 
     // ---------- HandLandmarker callbacks ----------
 

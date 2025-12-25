@@ -20,6 +20,14 @@ import java.io.OutputStream
 import java.util.UUID
 
 
+import android.view.*
+
+import androidx.camera.core.*
+
+import com.google.mediapipe.examples.handlandmarker.*
+import com.google.mediapipe.examples.handlandmarker.fragment.CameraFragment
+
+
 class MainActivity : AppCompatActivity() {
 
     lateinit var gestureTextView: TextView
@@ -54,17 +62,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     // CameraFragment will call this
-    fun sendFingerStates(states: List<Int>) {
-        val out = btOut ?: return
-        val data = states.map { it.toByte() }.toByteArray()
-        try {
-            out.write(data)
-        } catch (e: Exception) {
-            runOnUiThread {
-                Toast.makeText(this, "BT write error: ${e.message}", Toast.LENGTH_SHORT).show()
+    fun sendFingerStates(states: List<Int>, isEnabled: Boolean) {
+        if (isEnabled) {
+            val out = btOut ?: run {
+                runOnUiThread {
+                    Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show()
+                }
+                return
             }
+
+            val data = states.map { it.toByte() }.toByteArray()
+            try {
+                out.write(data)
+            } catch (e: Exception) {
+                runOnUiThread {
+                    Toast.makeText(this, "BT write error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            //donothing
         }
     }
+
 
     private fun showBluetoothDeviceDialog() {
         val adapter = BluetoothAdapter.getDefaultAdapter()
